@@ -46,22 +46,24 @@ router.post('/', upload.single('file'), async (req, res, next) => {
     try {
 
         //Step 3: task 1 - insert code here
-        const db = connectToDatabase();
+        const db = await connectToDatabase();
         //Step 3: task 2 - insert code here
         const collection = db.collection("Items");
         //Step 3: task 3 - insert code here
-        let newItem = req.body;
+        let secondChanceItem = req.body;
+        console.log(secondChanceItem)
         //Step 3: task 4 - insert code here
-        const lastQuery = await collection.find().sort({ "id": -1 }).limit(1);
-        await lastQuery.forEach(item => {
-            newItem.id = (parseInt(item.id + 1)).toString();
-        });
+        const randomId = Math.floor(100 + Math.random() * 900);
+        secondChanceItem.id = randomId.toString();
+
         //Step 3: task 5 - insert code here
         const date_added = Math.floor(new Date().getTime() / 1000);
-        newItem.date_added = date_added
+        secondChanceItem.date_added = date_added
 
-        newItem = await collection.insertOne(newItem)
-        res.status(201).json(newItem.ops[0]);
+        console.log(secondChanceItem)
+        secondChanceItem = await collection.insertOne(secondChanceItem)
+
+        res.status(201).json(secondChanceItem);
     } catch (e) {
         next(e);
     }

@@ -6,6 +6,9 @@ const router = express.Router();
 const connectToDatabase = require('../models/db');
 const logger = require('../logger');
 
+const app = express()
+app.use(express.json())
+
 // Define the upload directory path
 const directoryPath = 'public/images';
 
@@ -89,8 +92,10 @@ router.get('/:id', async (req, res, next) => {
     }
 });
 
+
 // Update and existing item
 router.put('/:id', async (req, res, next) => {
+    console.log(req.body)
     try {
         //Step 5: task 1 - insert code here
         const db = await connectToDatabase();
@@ -103,17 +108,24 @@ router.put('/:id', async (req, res, next) => {
             logger.error('secondChanceItem not found');
             return res.status(404).send(`Item with ${itemId} not found`);
         }
+
+        if (!req.body.category || !req.body.condition || !req.body.age_days || !req.body.description) {
+            return res.status(400).json({ error: "Missing required fields in request body" });
+        }
+
         //Step 5: task 4 - insert code here
-        item.category = req.body.category;
-        item.condition = req.body.condition;
-        item.age_days = req.body.age_days;
-        item.description = req.body.description;
-        item.age_years = Number((item.age_days / 365).toFixed(1));
-        item.updatedAt = new Date();
+        const updatedFields = {
+            category: req.body.category,
+            condition: req.body.condition,
+            age_days: req.body.age_days,
+            description: req.body.description,
+            age_years: Number((req.body.age_days / 365).toFixed(1)),
+            updatedAt: new Date()
+        };
 
         const updatepreloveItem = await collection.findOneAndUpdate(
             { "id": itemId },
-            { $set: secondChanceItem },
+            { $set: updatedFields },
             { returnDocument: 'after' }
         );
         //Step 5: task 5 - insert code here

@@ -7,12 +7,12 @@ const pinoLogger = require('./logger');
 const connectToDatabase = require('./models/db');
 const { loadData } = require("./util/import-mongo/index");
 
-const secondChanceItemsRoutes = require('./routes/secondChanceItemsRoutes');
 
 const app = express();
 app.use("*", cors());
 
-app.use('/api/secondchance/items', secondChanceItemsRoutes);
+app.use(express.json());
+
 
 const port = 3060;
 
@@ -23,7 +23,7 @@ connectToDatabase().then(() => {
     .catch((e) => console.error('Failed to connect to DB', e));
 
 
-app.use(express.json());
+
 
 // Route files
 
@@ -31,10 +31,10 @@ app.use(express.json());
 //{{insert code here}}
 
 // Items API Task 1: import the secondChanceItemsRoutes and store in a constant called secondChanceItemsRoutes
-//{{insert code here}}
+const secondChanceItemsRoutes = require('./routes/secondChanceItemsRoutes');
 
 // Search API Task 1: import the searchRoutes and store in a constant called searchRoutes
-//{{insert code here}}
+const searchRoutes = require('./routes/searchRoutes');
 
 
 const pinoHttp = require('pino-http');
@@ -47,10 +47,10 @@ app.use(pinoHttp({ logger }));
 //{{insert code here}}
 
 // Items API Task 2: add the secondChanceItemsRoutes to the server by using the app.use() method.
-//{{insert code here}}
+app.use('/api/secondchance/items', secondChanceItemsRoutes);
 
 // Search API Task 2: add the searchRoutes to the server by using the app.use() method.
-//{{insert code here}}
+app.use('/api/secondchance/search', searchRoutes);
 
 
 // Global Error Handler

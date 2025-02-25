@@ -1,12 +1,13 @@
 require('dotenv').config();
+//console.log("MongoDB URL:", process.env.MONGO_URL);
 const MongoClient = require('mongodb').MongoClient;
 const fs = require('fs');
 
 // MongoDB connection URL with authentication options
 let url = `${process.env.MONGO_URL}`;
 let filename = `${__dirname}/secondChanceItems.json`;
-const dbName = 'secondChance';
-const collectionName = 'secondChanceItems';
+const dbName = 'secondChanceDB';
+const collectionName = 'Items';
 
 // notice you have to load the array of items into the data object
 const data = JSON.parse(fs.readFileSync(filename, 'utf8')).docs;
@@ -28,7 +29,7 @@ async function loadData() {
         let cursor = await collection.find({});
         let documents = await cursor.toArray();
 
-        if(documents.length == 0) {
+        if (documents.length == 0) {
             // Insert data into the collection
             const insertResult = await collection.insertMany(data);
             console.log('Inserted documents:', insertResult.insertedCount);
@@ -47,4 +48,4 @@ loadData();
 
 module.exports = {
     loadData,
-  };
+};

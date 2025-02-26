@@ -91,6 +91,7 @@ router.post('/login', async (req, res) => {
 });
 
 router.put('/update', async (req, res) => {
+    console.log(req.body)
     // Task 2: Validate the input using `validationResult` and return approiate message if there is an error.
     const errors = validationResult(req);
     // Task 3: Check if `email` is present in the header and throw an appropriate error message if not present.
@@ -113,7 +114,7 @@ router.put('/update', async (req, res) => {
             logger.error('User not found');
             return res.status(404).json({ error: "User not found" });
         }
-        existingUser.firstName = req.body.firstName;
+        existingUser.firstName = req.body.name;
         existingUser.updatedAt = new Date();
         console.log(existingUser)
         //Task 6: Update user credentials in DB

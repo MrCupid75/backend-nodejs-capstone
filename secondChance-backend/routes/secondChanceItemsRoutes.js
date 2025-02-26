@@ -10,7 +10,7 @@ const app = express()
 app.use(express.json())
 
 // Define the upload directory path
-const directoryPath = 'public/images';
+const directoryPath = path.join(__dirname, '../public/images');
 
 // Set up storage for uploaded files
 const storage = multer.diskStorage({
